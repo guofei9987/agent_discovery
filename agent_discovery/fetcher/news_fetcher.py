@@ -68,7 +68,7 @@ class NewsFetcher(object):
                     , "news_title": news_one['title']
                     , "url": news_one['url']
                     # ❗️很多源没有时间，用当前时间
-                    , "published_at": datetime.now().isoformat()
+                    , "published_at": datetime.now()
                 })
 
         print(f"从 {len(platforms)} 个平台，获取了 {len(news_all)} 条新闻")

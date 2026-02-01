@@ -92,7 +92,7 @@ class RSSFetcher:
             elif hasattr(entry, 'updated_parsed') and entry.updated_parsed:
                 published_at = datetime(*entry.updated_parsed[:6])
             else:
-                published_at = datetime.utcnow()
+                published_at = datetime.now()
 
             # 创建统一格式的文章字典
             article = {
@@ -101,7 +101,7 @@ class RSSFetcher:
                 "news_id": link,  # 使用链接作为ID
                 "news_title": title,
                 "url": link,
-                "published_at": published_at.isoformat()
+                "published_at": published_at
             }
 
             return article
