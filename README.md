@@ -11,7 +11,22 @@ sh start.sh
 
 # 配置项
 
-新闻源
+配置模版参考：[config.yaml](./agent_discovery/config/config.yaml)
+
+## arXiv
+
+```yaml
+arXiv:
+  # query 直接沿用 arXiv 的 query 语法：
+  # https://arxiv.org/help/api/user-manual#query_details
+  - query: "transformer"
+    max_results: 10
+  - query: '("llm" OR "large language model" OR "large language models")'
+    max_results: 30
+```
+
+
+## 新闻源
 
 ```yaml
 ews_source:
@@ -115,7 +130,7 @@ ews_source:
       name: 爱奇艺-热播榜
 ```
 
-RSS
+## RSS
 
 ```yaml
 rss:
