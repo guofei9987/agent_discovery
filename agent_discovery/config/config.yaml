@@ -1,0 +1,61 @@
+news_source:
+  enabled: true  # 是否启用
+  sources:
+    - id: "toutiao"
+      name: "今日头条"
+    - id: "baidu"
+      name: "百度热搜"
+    - id: "wallstreetcn-hot"
+      name: "华尔街见闻"
+    - id: "thepaper"
+      name: "澎湃新闻"
+    - id: "bilibili-hot-search"
+      name: "bilibili 热搜"
+    - id: "cls-hot"
+      name: "财联社热门"
+    - id: "ifeng"
+      name: "凤凰网"
+    - id: "tieba"
+      name: "贴吧"
+    - id: "weibo"
+      name: "微博"
+    - id: "douyin"
+      name: "抖音"
+    - id: "zhihu"
+      name: "知乎"
+
+rss:
+  enabled: true
+  freshness_filter:
+    enabled: true                     # 是否启用新鲜度过滤（默认启用）
+
+    max_age_days: 3                   # 最大文章年龄（天）
+    # - 正整数：只推送 N 天内的文章
+    # - 0：禁用过滤，推送所有文章
+
+  # 单个 feed 可配置 max_age_days 覆盖全局设置：
+  # - 不配置：使用全局 freshness_filter.max_age_days（默认 3 天）
+  # - 正整数：覆盖全局设置，只推送此天数内的文章
+  # - 0：禁用此频道的新鲜度过滤，推送所有文章
+  feeds:
+    - id: "hacker-news"
+      name: "Hacker News"
+      url: "https://hnrss.org/frontpage"
+      # max_age_days: 1               # 示例：只推送1天内的文章
+
+    - id: "ruanyifeng"
+      name: "阮一峰的网络日志"
+      url: "http://www.ruanyifeng.com/blog/atom.xml"
+      # max_age_days: 7               # 示例：推送7天内的文章（更新较慢的博客）
+
+    - id: "yahoo-finance"
+      name: "雅虎财经"
+      url: "https://finance.yahoo.com/news/rssindex"
+
+
+    # 自定义源示例
+    # - id: "custom-feed"
+    #   name: "自定义源"
+    #   url: "https://example.com/feed.xml"
+    #   enabled: false
+    #   max_age_days: 0               # 示例：禁用过滤，推送所有文章

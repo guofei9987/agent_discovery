@@ -1,0 +1,18 @@
+# 后端
+fastapi
+uvicorn[standard]==0.24.0
+
+
+# 新闻获取相关
+feedparser
+requests
+beautifulsoup4
+
+
+# 数据处理和工具
+loguru
+
+
+# 数据库和ORM
+sqlalchemy
+alembic

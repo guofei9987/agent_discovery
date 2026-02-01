@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻聚合器</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --background-color: #f5f5f5;
+            --card-background: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .stats {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1rem;
+        }
+
+        .news-card {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .news-card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .news-card .source {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .news-card .summary {
+            flex-grow: 1;
+            margin-bottom: 1rem;
+        }
+
+        .news-card .meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .sentiment-positive {
+            color: #27ae60;
+        }
+
+        .sentiment-negative {
+            color: #e74c3c;
+        }
+
+        .sentiment-neutral {
+            color: #7f8c8d;
+        }
+
+        .importance-high {
+            background-color: #ffeaa7;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .filter-section {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .filter-section h2 {
+            margin-top: 0;
+        }
+
+        .filter-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-control {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-control label {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .filter-control select, .filter-control input {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .error {
+            background-color: #e74c3c;
+            color: white;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>📰 新闻聚合器</h1>
+                <div class="controls">
+                    <button id="refreshBtn">刷新新闻</button>
+                    <button id="fetchBtn">获取新新闻</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="stats">
+            <h2>统计信息</h2>
+            <div id="statsContent">
+                <p>加载中...</p>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <h2>过滤器</h2>
+            <div class="filter-controls">
+                <div class="filter-control">
+                    <label for="sourceFilter">新闻源</label>
+                    <select id="sourceFilter">
+                        <option value="">全部</option>
+                    </select>
+                </div>
+                <div class="filter-control">
+                    <label for="importanceFilter">重要性</label>
+                    <select id="importanceFilter">
+                        <option value="">全部</option>
+                        <option value="0.8">高 (≥ 0.8)</option>
+                        <option value="0.5">中 (≥ 0.5)</option>
+                        <option value="0.2">低 (≥ 0.2)</option>
+                    </select>
+                </div>
+                <div class="filter-control">
+                    <label for="sentimentFilter">情感</label>
+                    <select id="sentimentFilter">
+                        <option value="">全部</option>
+                        <option value="positive">正面</option>
+                        <option value="negative">负面</option>
+                        <option value="neutral">中性</option>
+                    </select>
+                </div>
+                <div class="filter-control">
+                    <label for="sortBy">排序</label>
+                    <select id="sortBy">
+                        <option value="id">按获取时间</option>
+                        <option value="published_at">按发布时间</option>
+                    </select>
+                </div>
+                <div class="filter-control">
+                    <label for="searchInput">搜索</label>
+                    <input type="text" id="searchInput" placeholder="关键词...">
+                </div>
+            </div>
+        </div>
+
+        <div id="newsContainer">
+            <div class="loading">
+                <p>加载新闻中...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API基础URL
+        const API_BASE = 'http://localhost:8000';
+
+        // DOM元素
+        const refreshBtn = document.getElementById('refreshBtn');
+        const fetchBtn = document.getElementById('fetchBtn');
+        const newsContainer = document.getElementById('newsContainer');
+        const statsContent = document.getElementById('statsContent');
+        const sourceFilter = document.getElementById('sourceFilter');
+        const importanceFilter = document.getElementById('importanceFilter');
+        const sentimentFilter = document.getElementById('sentimentFilter');
+        const sortBySelect = document.getElementById('sortBy');
+        const searchInput = document.getElementById('searchInput');
+
+        // 当前过滤条件
+        let currentFilters = {
+            source: '',
+            importance: '',
+            sentiment: '',
+            search: ''
+        };
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStats();
+            loadSources();
+            loadNews();
+        });
+
+        // 绑定事件监听器
+        refreshBtn.addEventListener('click', loadNews);
+        fetchBtn.addEventListener('click', fetchNews);
+
+        // 过滤器事件监听
+        sourceFilter.addEventListener('change', function() {
+            currentFilters.source = this.value;
+            loadNews();
+        });
+
+        importanceFilter.addEventListener('change', function() {
+            currentFilters.importance = this.value;
+            loadNews();
+        });
+
+        sentimentFilter.addEventListener('change', function() {
+            currentFilters.sentiment = this.value;
+            loadNews();
+        });
+
+        sortBySelect.addEventListener('change', loadNews);
+
+        searchInput.addEventListener('input', function() {
+            currentFilters.search = this.value;
+            loadNews();
+        });
+
+        // 加载统计信息
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE}/stats`);
+                const stats = await response.json();
+
+                statsContent.innerHTML = `
+                    <p>总文章数: <strong>${stats.total_articles}</strong></p>
+                    <p>今日文章数: <strong>${stats.today_articles}</strong></p>
+                    <p>本周文章数: <strong>${stats.week_articles}</strong></p>
+                `;
+            } catch (error) {
+                console.error('加载统计信息失败:', error);
+                statsContent.innerHTML = '<p class="error">加载统计信息失败</p>';
+            }
+        }
+
+        // 加载新闻源列表
+        async function loadSources() {
+            try {
+                const response = await fetch(`${API_BASE}/sources`);
+                const sources = await response.json();
+
+                // 清空现有选项
+                sourceFilter.innerHTML = '<option value="">全部</option>';
+
+                // 添加新的选项
+                sources.forEach(source => {
+                    const option = document.createElement('option');
+                    option.value = source;
+                    option.textContent = source;
+                    sourceFilter.appendChild(option);
+                });
+            } catch (error) {
+                console.error('加载新闻源失败:', error);
+            }
+        }
+
+        // 加载新闻
+        async function loadNews() {
+            try {
+                // 显示加载状态
+                newsContainer.innerHTML = '<div class="loading"><p>加载新闻中...</p></div>';
+
+                // 构建查询参数
+                const params = new URLSearchParams();
+                params.append('limit', 20);
+
+                if (currentFilters.source) {
+                    params.append('source', currentFilters.source);
+                }
+
+                if (currentFilters.importance) {
+                    params.append('importance_threshold', currentFilters.importance);
+                }
+
+                if (currentFilters.sentiment) {
+                    params.append('sentiment_filter', currentFilters.sentiment);
+                }
+
+                if (currentFilters.search) {
+                    params.append('keyword', currentFilters.search);
+                }
+
+                // 添加排序参数
+                params.append('sort_by', sortBySelect.value);
+
+                const response = await fetch(`${API_BASE}/articles?${params.toString()}`);
+                const articles = await response.json();
+
+                // 渲染新闻
+                renderNews(articles);
+            } catch (error) {
+                console.error('加载新闻失败:', error);
+                newsContainer.innerHTML = '<div class="error">加载新闻失败</div>';
+            }
+        }
+
+        // 渲染新闻
+        function renderNews(articles) {
+            if (articles.length === 0) {
+                newsContainer.innerHTML = '<div class="loading"><p>没有找到相关新闻</p></div>';
+                return;
+            }
+
+            const newsHTML = articles.map(article => {
+                // 判断情感类别
+                let sentimentClass = 'sentiment-neutral';
+                let sentimentText = '中性';
+                if (article.ai_sentiment > 0) {
+                    sentimentClass = 'sentiment-positive';
+                    sentimentText = '正面';
+                } else if (article.ai_sentiment < 0) {
+                    sentimentClass = 'sentiment-negative';
+                    sentimentText = '负面';
+                }
+
+                // 判断重要性
+                let importanceHTML = '';
+                if (article.ai_importance >= 0.8) {
+                    importanceHTML = '<span class="importance-high">高重要性</span>';
+                }
+
+                return `
+                    <div class="news-card">
+                        <h3>${escapeHtml(article.title)}</h3>
+                        <div class="source">${escapeHtml(article.source)}</div>
+                        <div class="summary">
+                            <p>${escapeHtml(article.ai_summary || article.summary || '无摘要')}</p>
+                        </div>
+                        <div class="meta">
+                            <span class="${sentimentClass}">${sentimentText} (${article.ai_sentiment?.toFixed(2) || 'N/A'})</span>
+                            <span>${importanceHTML}</span>
+                            <span>${formatDate(article.published_at)}</span>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <a href="${article.url}" target="_blank" style="color: var(--secondary-color); text-decoration: none; font-weight: bold;">阅读原文</a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            newsContainer.innerHTML = `<div class="news-grid">${newsHTML}</div>`;
+        }
+
+        // 获取新新闻
+        async function fetchNews() {
+            try {
+                fetchBtn.disabled = true;
+                fetchBtn.textContent = '获取中...';
+
+                const response = await fetch(`${API_BASE}/fetch`, {
+                    method: 'POST'
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(`成功获取 ${result.articles_fetched} 篇新文章`);
+                    loadNews();
+                    loadStats();
+                } else {
+                    alert(`获取新闻失败: ${result.message}`);
+                }
+            } catch (error) {
+                console.error('获取新闻失败:', error);
+                alert('获取新闻失败');
+            } finally {
+                fetchBtn.disabled = false;
+                fetchBtn.textContent = '获取新新闻';
+            }
+        }
+
+        // 辅助函数：转义HTML
+        function escapeHtml(text) {
+            const map = {
+                '&': '&',
+                '<': '<',
+                '>': '>',
+                '"': '"',
+                "'": '&#039;'
+            };
+
+            return text.replace(/[&<>"']/g, function(m) {
+                return map[m];
+            });
+        }
+
+        // 辅助函数：格式化日期
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+    </script>
+</body>
+</html>
