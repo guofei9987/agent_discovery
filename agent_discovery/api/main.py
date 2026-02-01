@@ -82,7 +82,7 @@ async def health_check():
 
 @app.get("/articles", response_model=List[ArticleResponse])
 async def get_articles(
-        limit: int = Query(50, ge=1, le=100, description="返回文章数量限制"),
+        limit: int = Query(50, ge=1, le=500, description="返回文章数量限制"),
         offset: int = Query(0, ge=0, description="偏移量"),
         source: Optional[str] = Query(None, description="新闻源过滤"),
         importance_threshold: Optional[float] = Query(None, ge=0, le=1, description="重要性阈值"),
