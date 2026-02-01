@@ -3,6 +3,7 @@ __pycache__/
 venv/
 .env
 
+agent_discovery_config/
 
 .vscode/
 .idea/
