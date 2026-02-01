@@ -16,7 +16,7 @@ news_source:
     - id: "ifeng"
       name: "凤凰网"
     - id: "tieba"
-      name: "贴吧"
+      name: "百度贴吧"
     - id: "weibo"
       name: "微博"
     - id: "douyin"

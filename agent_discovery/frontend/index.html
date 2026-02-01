@@ -93,17 +93,13 @@
         .news-card h3 {
             margin-top: 0;
             color: var(--primary-color);
+            font-size: 1.1em;
         }
 
         .news-card .source {
             color: var(--secondary-color);
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
-        }
-
-        .news-card .summary {
-            flex-grow: 1;
-            margin-bottom: 1rem;
         }
 
         .news-card .meta {
@@ -425,9 +421,6 @@
                     <div class="news-card">
                         <h3><a href="${article.url}" target="_blank" style="color: inherit; text-decoration: none;">${escapeHtml(article.title)}</a></h3>
                         <div class="source">${escapeHtml(article.source)}</div>
-                        <div class="summary">
-                            <p>${escapeHtml(article.ai_summary || article.summary || '无摘要')}</p>
-                        </div>
                         <div class="meta">
                             <span class="${sentimentClass}">${sentimentText} (${article.ai_sentiment?.toFixed(2) || 'N/A'})</span>
                             <span>${importanceHTML}</span>
