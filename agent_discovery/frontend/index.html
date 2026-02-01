@@ -76,11 +76,12 @@
         .news-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
         .news-card {
             background-color: var(--card-background);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 1rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -422,7 +423,7 @@
 
                 return `
                     <div class="news-card">
-                        <h3>${escapeHtml(article.title)}</h3>
+                        <h3><a href="${article.url}" target="_blank" style="color: inherit; text-decoration: none;">${escapeHtml(article.title)}</a></h3>
                         <div class="source">${escapeHtml(article.source)}</div>
                         <div class="summary">
                             <p>${escapeHtml(article.ai_summary || article.summary || '无摘要')}</p>
@@ -431,9 +432,6 @@
                             <span class="${sentimentClass}">${sentimentText} (${article.ai_sentiment?.toFixed(2) || 'N/A'})</span>
                             <span>${importanceHTML}</span>
                             <span>${formatDate(article.published_at)}</span>
-                        </div>
-                        <div style="margin-top: 1rem;">
-                            <a href="${article.url}" target="_blank" style="color: var(--secondary-color); text-decoration: none; font-weight: bold;">阅读原文</a>
                         </div>
                     </div>
                 `;
