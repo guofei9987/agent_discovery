@@ -1,0 +1,4 @@
+include README.md
+include LICENSE
+recursive-include agent_discovery/config *.yaml
+recursive-include agent_discovery/frontend *.html

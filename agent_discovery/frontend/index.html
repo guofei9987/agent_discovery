@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>新闻聚合器</title>
+    <title>信息聚合器</title>
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -197,10 +197,10 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <h1>📰 新闻聚合器</h1>
+                <h1>📰 信息聚合器</h1>
                 <div class="controls">
-                    <button id="refreshBtn">刷新新闻</button>
-                    <button id="fetchBtn">获取新新闻</button>
+                    <button id="refreshBtn">刷新信息</button>
+                    <button id="fetchBtn">获取新信息</button>
                 </div>
             </div>
         </div>
@@ -218,7 +218,7 @@
             <h2>过滤器</h2>
             <div class="filter-controls">
                 <div class="filter-control">
-                    <label for="sourceFilter">新闻源</label>
+                    <label for="sourceFilter">信息源</label>
                     <select id="sourceFilter">
                         <option value="">全部</option>
                     </select>
@@ -257,7 +257,7 @@
 
         <div id="newsContainer">
             <div class="loading">
-                <p>加载新闻中...</p>
+                <p>加载信息中...</p>
             </div>
         </div>
     </div>
@@ -336,7 +336,7 @@
             }
         }
 
-        // 加载新闻源列表
+        // 加载信息源列表
         async function loadSources() {
             try {
                 const response = await fetch(`${API_BASE}/sources`);
@@ -353,15 +353,15 @@
                     sourceFilter.appendChild(option);
                 });
             } catch (error) {
-                console.error('加载新闻源失败:', error);
+                console.error('加载信息源失败:', error);
             }
         }
 
-        // 加载新闻
+        // 加载信息
         async function loadNews() {
             try {
                 // 显示加载状态
-                newsContainer.innerHTML = '<div class="loading"><p>加载新闻中...</p></div>';
+                newsContainer.innerHTML = '<div class="loading"><p>加载信息中...</p></div>';
 
                 // 构建查询参数
                 const params = new URLSearchParams();
@@ -389,18 +389,18 @@
                 const response = await fetch(`${API_BASE}/articles?${params.toString()}`);
                 const articles = await response.json();
 
-                // 渲染新闻
+                // 渲染信息
                 renderNews(articles);
             } catch (error) {
-                console.error('加载新闻失败:', error);
-                newsContainer.innerHTML = '<div class="error">加载新闻失败</div>';
+                console.error('加载信息失败:', error);
+                newsContainer.innerHTML = '<div class="error">加载信息失败</div>';
             }
         }
 
-        // 渲染新闻
+        // 渲染信息
         function renderNews(articles) {
             if (articles.length === 0) {
-                newsContainer.innerHTML = '<div class="loading"><p>没有找到相关新闻</p></div>';
+                newsContainer.innerHTML = '<div class="loading"><p>没有找到相关信息</p></div>';
                 return;
             }
 
@@ -441,7 +441,7 @@
             newsContainer.innerHTML = `<div class="news-grid">${newsHTML}</div>`;
         }
 
-        // 获取新新闻
+        // 获取新信息
         async function fetchNews() {
             try {
                 fetchBtn.disabled = true;
@@ -457,14 +457,14 @@
                     loadNews();
                     loadStats();
                 } else {
-                    alert(`获取新闻失败: ${result.message}`);
+                    alert(`获取信息失败: ${result.message}`);
                 }
             } catch (error) {
-                console.error('获取新闻失败:', error);
-                alert('获取新闻失败');
+                console.error('获取信息失败:', error);
+                alert('获取信息失败');
             } finally {
                 fetchBtn.disabled = false;
-                fetchBtn.textContent = '获取新新闻';
+                fetchBtn.textContent = '获取新信息';
             }
         }
 

@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-discovery"
+version = "0.0.1"
+description = "信息获取与新闻聚合器"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+  { name = "guofei9987", email = "me@guofei.site" }
+]
+dependencies = [
+  "fastapi",
+  "uvicorn[standard]==0.24.0",
+  "arxiv",
+  "feedparser",
+  "requests",
+  "beautifulsoup4",
+  "loguru",
+  "sqlalchemy",
+  "alembic",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+
+[tool.setuptools]
+include-package-data = true
+license-files = []
+
+[tool.setuptools.packages.find]
+exclude = ["tests*", "data*", "venv*"]
+
+[tool.setuptools.package-data]
+agent_discovery = [
+  "config/*.yaml",
+  "frontend/*.html",
+]

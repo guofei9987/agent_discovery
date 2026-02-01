@@ -2,8 +2,62 @@
 我在用的信息获取app
 
 
+# future palns
+
+**More Information Sources**
+- [x] arXiv
+- [x] RSS
+- Social Media:
+    - [ ] Reddit Api
+    - [ ] X Api
+- News Api:
+    - [ ] NewsAPI.org
+    - [ ] Associated Press API
+- Technical Sources:
+  - [ ] GitHub API for trending repositories
+  - [ ] Stack Overflow API for trending questions
+  - [ ] Dev.to API for developer articles
+
+- Academic Sources:
+  - [ ] PubMed for medical research
+  - [ ] IEEE Xplore for technical papers
+  - [ ] Google Scholar integration
+
+
+
+**LLM Assistance**
+- [ ] LLM-based Information retrieval
+- [ ] LLM-based Information reranking
+- [ ] LLM-based Information summarize
+
+
+
+
 # How to Use
 
+<!-- ## 安装
+
+```shell
+pip install agent-discovery
+```
+
+## 运行
+
+启动 API 服务：
+
+```shell
+python -m agent_discovery.api.main
+```
+
+启动前端开发服务器：
+
+```shell
+python -m agent_discovery.frontend.server
+```
+
+首次运行会在当前目录生成默认配置目录 `agent_discovery_config`。
+
+## 本地开发 -->
 
 ```shell
 sh start.sh
