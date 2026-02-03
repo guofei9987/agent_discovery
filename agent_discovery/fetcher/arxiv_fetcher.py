@@ -79,7 +79,7 @@ class ArxivFetcher:
         papers = list()
         for query_case in cfg['arXiv']:
             paper = self.fetch_one(query_case['query'], max_results=query_case.get('max_results', 5))
-            papers.append(paper)
+            papers.extend(paper)
 
         print(f"从arXiv获取了 {len(papers)} 篇论文")
         return papers
