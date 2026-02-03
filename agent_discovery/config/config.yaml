@@ -8,9 +8,9 @@ news_source:
     - id: weibo
       name: 微博-实时热搜
     - id: zaobao
-      name: 联合早报
-    - id: coolapk
-      name: 酷安-今日最热
+      name: 联合早报 
+    # - id: coolapk
+    #   name: 酷安-今日最热
     - id: mktnews-flash
       name: MKTNews-快讯
     - id: wallstreetcn-quick
@@ -39,8 +39,8 @@ news_source:
       name: 卫星通讯社
     - id: cankaoxiaoxi
       name: 参考消息
-    - id: pcbeta-windows11
-      name: 远景论坛-Win11
+    # - id: pcbeta-windows11
+    #   name: 远景论坛-Win11
     - id: cls-telegraph
       name: 财联社-电报
     - id: cls-depth
@@ -63,12 +63,8 @@ news_source:
       name: Product Hunt
     - id: github-trending-today
       name: Github-Today
-    - id: bilibili-hot-search
-      name: 哔哩哔哩-热搜
-    - id: bilibili-hot-video
-      name: 哔哩哔哩-热门视频
-    - id: bilibili-ranking
-      name: 哔哩哔哩-排行榜
+    - id: bilibili
+      name: 哔哩哔哩
     - id: kuaishou
       name: 快手
     - id: kaopu
@@ -89,8 +85,8 @@ news_source:
       name: 虫部落-最新
     - id: chongbuluo-hot
       name: 虫部落-最热
-    - id: douban
-      name: 豆瓣-热门电影
+    # - id: douban
+    #   name: 豆瓣-热门电影
     # - id: steam
     #   name: Steam-在线人数
     - id: tencent-hot
@@ -108,13 +104,6 @@ rss:
     enabled: true                     # 是否启用新鲜度过滤（默认启用）
 
     max_age_days: 3                   # 最大文章年龄（天）
-    # - 正整数：只推送 N 天内的文章
-    # - 0：禁用过滤，推送所有文章
-
-  # 单个 feed 可配置 max_age_days 覆盖全局设置：
-  # - 不配置：使用全局 freshness_filter.max_age_days（默认 3 天）
-  # - 正整数：覆盖全局设置，只推送此天数内的文章
-  # - 0：禁用此频道的新鲜度过滤，推送所有文章
   feeds:
     - id: "hacker-news"
       name: "Hacker News"

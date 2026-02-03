@@ -29,7 +29,7 @@ class NewsFetcher(object):
                   , min_retry_wait: int = 3
                   , max_retry_wait: int = 5
                   ) -> dict:
-        url = f"{self.url}?id={platform_id}&latest"
+        url = f"{self.url}?id={platform_id}"
 
         retries = 0
         while retries < max_retries:
