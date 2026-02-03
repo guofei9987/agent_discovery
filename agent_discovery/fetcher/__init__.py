@@ -1,6 +1,6 @@
 from .news_fetcher import NewsFetcher
 from .rss_fetcher import RSSFetcher
-
+from .arxiv_fetcher import ArxivFetcher
 
 def fetch_all_msg(cfg):
     all_msg = list()

@@ -6,7 +6,23 @@ import agent_discovery.config as config
 with resources.open_text(config, "config.yaml", encoding="utf-8") as f:
     cfg = yaml.safe_load(f)
 
-from agent_discovery.fetcher import NewsFetcher, RSSFetcher, fetch_all_msg
+from agent_discovery.fetcher import NewsFetcher, RSSFetcher, ArxivFetcher, fetch_all_msg
+
+
+def test_arxiv_fetcher():
+    print(f"开始测试Arxiv获取器...")
+    arxiv_fetcher = ArxivFetcher()
+    papers = arxiv_fetcher.fetch_one("machine learning", max_results=5)
+    assert len(papers) > 0
+    print("Arxiv获取器测试完成")
+
+
+def test_arxiv_fetcher_all():
+    print(f"开始测试Arxiv批量获取器...")
+    arxiv_fetcher = ArxivFetcher()
+    papers_all = arxiv_fetcher.fetch_all(cfg)
+    assert len(papers_all) > 0
+    print("Arxiv批量获取器测试完成")
 
 
 def test_news_fetcher_one():

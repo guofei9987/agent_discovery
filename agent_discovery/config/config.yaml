@@ -1,3 +1,12 @@
+arXiv:
+  # query 直接沿用 arXiv 的 query 语法：
+  # https://arxiv.org/help/api/user-manual#query_details
+  - query: "transformer"
+    max_results: 10
+  - query: '("llm" OR "large language model" OR "large language models")'
+    max_results: 30
+
+
 news_source:
   enabled: true  # 是否启用
   sources: # 不想使用的源可以注释掉

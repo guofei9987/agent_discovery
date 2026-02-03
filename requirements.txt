@@ -4,6 +4,7 @@ uvicorn[standard]==0.24.0
 
 
 # 新闻获取相关
+arxiv
 feedparser
 requests
 beautifulsoup4
