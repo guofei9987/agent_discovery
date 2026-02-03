@@ -15,7 +15,7 @@ def fetch_all_msg(cfg):
         rss_msg = fetcher2.fetch_all_rss(cfg)
         all_msg.extend(rss_msg)
 
-    if cfg.get('arxiv', {}):
+    if cfg.get('arXiv', {}):
         arxiv = ArxivFetcher()
         arxiv_msg = arxiv.fetch_all(cfg)
         all_msg.extend(arxiv_msg)
