@@ -8,6 +8,10 @@ with resources.open_text(config, "config.yaml", encoding="utf-8") as f:
 
 from agent_discovery.fetcher import NewsFetcher, RSSFetcher, ArxivFetcher, fetch_all_msg
 
+def test_tmp():
+    arxiv_fetcher = ArxivFetcher()
+    papers = arxiv_fetcher.fetch_one("machine learning", max_results=5)
+    print(papers)
 
 def test_arxiv_fetcher():
     print(f"开始测试Arxiv获取器...")

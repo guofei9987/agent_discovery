@@ -77,7 +77,7 @@ class ArxivFetcher:
             return list()
 
         papers = list()
-        for query_case in cfg['arXiv']:
+        for query_case in cfg['arXiv']['queries']:
             paper = self.fetch_one(query_case['query'], max_results=query_case.get('max_results', 5))
             papers.extend(paper)
 

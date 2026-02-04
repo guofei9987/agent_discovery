@@ -13,15 +13,14 @@ import yaml
 from importlib import resources
 
 from agent_discovery.storage.models import Article
-from agent_discovery.storage.database import get_database_session, initialize_database
+# from agent_discovery.storage.database import get_database_session, initialize_database
+from agent_discovery.storage.database import database_manager
 from agent_discovery.fetcher.rss_fetcher import RSSFetcher
 from agent_discovery.fetcher import fetch_all_msg
 # from agent_discovery.llm_processor.llm_handler import get_llm_handler, process_articles_batch
-from agent_discovery.storage.database import save_articles_to_db
+# from agent_discovery.storage.database import save_articles_to_db
 from agent_discovery.config_loader import load_or_create_config
 
-# 初始化数据库
-initialize_database()
 
 # 创建FastAPI应用
 app = FastAPI(
@@ -77,7 +76,7 @@ async def root():
 @app.get("/health")
 async def health_check():
     """健康检查"""
-    return {"status": "healthy", "timestamp": datetime.utcnow()}
+    return {"status": "healthy", "timestamp": datetime.now()}
 
 
 @app.get("/articles", response_model=List[ArticleResponse])
@@ -95,7 +94,7 @@ async def get_articles(
     """
     获取文章列表
     """
-    session = get_database_session()
+    session = database_manager.get_session()
     try:
         query = session.query(Article)
 
@@ -146,7 +145,7 @@ async def get_article(article_id: int):
     """
     获取单篇文章详情
     """
-    session = get_database_session()
+    session = database_manager.get_session()
     try:
         article = session.query(Article).filter(Article.id == article_id).first()
         if not article:
@@ -171,7 +170,7 @@ async def fetch_news():
 
         # ❗️ enabled 的逻辑还没写
         all_articles = fetch_all_msg(cfg)
-        save_articles_to_db(all_articles)
+        database_manager.save_articles_to_db(all_articles)
 
         return FetchResult(
             success=True,
@@ -192,7 +191,7 @@ async def get_sources():
     """
     获取所有新闻源列表
     """
-    session = get_database_session()
+    session = database_manager.get_session()
     try:
         sources = session.query(Article.source).distinct().all()
         return [source[0] for source in sources]
@@ -208,15 +207,15 @@ async def get_stats():
     """
     获取统计信息
     """
-    session = get_database_session()
+    session = database_manager.get_session()
     try:
         total_articles = session.query(Article).count()
         today_articles = session.query(Article).filter(
-            Article.published_at >= datetime.utcnow().date()
+            Article.published_at >= datetime.now().date()
         ).count()
 
         # 获取最近7天的文章统计
-        week_ago = datetime.utcnow() - timedelta(days=7)
+        week_ago = datetime.now() - timedelta(days=7)
         week_articles = session.query(Article).filter(
             Article.published_at >= week_ago
         ).count()

@@ -1,13 +1,18 @@
 arXiv:
+  lifecycle_days: 180 # 生命周期，超过的文档会删除或归档
+  on_expire: cold # 过期信息处理方式，支持 delete 或 cold
   # query 直接沿用 arXiv 的 query 语法：
   # https://arxiv.org/help/api/user-manual#query_details
-  - query: "transformer"
-    max_results: 10
-  - query: '("llm" OR "large language model" OR "large language models")'
-    max_results: 30
+  queries:
+    - query: "transformer"
+      max_results: 10
+    - query: '("llm" OR "large language model" OR "large language models")'
+      max_results: 30
 
 
 news_source:
+  lifecycle_days: 1
+  on_expire: delete
   sources: # 不想使用的源可以注释掉
     - id: v2ex-share
       name: V2EX-最新分享
@@ -73,8 +78,8 @@ news_source:
       name: Github-Today
     - id: bilibili
       name: 哔哩哔哩
-    - id: kuaishou
-      name: 快手
+    # - id: kuaishou
+    #   name: 快手
     - id: kaopu
       name: 靠谱新闻
     - id: jin10
@@ -107,6 +112,8 @@ news_source:
     #   name: 爱奇艺-热播榜
 
 rss:
+  lifecycle_days: 60
+  on_expire: delete
   freshness_filter:
     enabled: true                     # 是否启用新鲜度过滤（默认启用）
 
