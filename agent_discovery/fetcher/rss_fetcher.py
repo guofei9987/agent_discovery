@@ -66,7 +66,7 @@ class RSSFetcher:
 
         # 检查文章年龄
         max_age = timedelta(days=max_age_days)
-        article_age = datetime.utcnow() - published_at
+        article_age = datetime.now() - published_at
         return article_age <= max_age
 
     def parse_article(self, entry: Dict, source_url: str, source_name: str) -> Optional[Dict]:

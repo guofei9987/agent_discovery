@@ -24,10 +24,6 @@ class DatabaseManager:
 
         # 初始化数据库表结构
         Session = init_database(db_url)
-
-        # 创建默认配置
-        # create_default_configurations(Session)
-
         self.Session = Session
     
     def get_session(self):

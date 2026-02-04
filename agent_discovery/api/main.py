@@ -13,12 +13,9 @@ import yaml
 from importlib import resources
 
 from agent_discovery.storage.models import Article
-# from agent_discovery.storage.database import get_database_session, initialize_database
 from agent_discovery.storage.database import database_manager
 from agent_discovery.fetcher.rss_fetcher import RSSFetcher
 from agent_discovery.fetcher import fetch_all_msg
-# from agent_discovery.llm_processor.llm_handler import get_llm_handler, process_articles_batch
-# from agent_discovery.storage.database import save_articles_to_db
 from agent_discovery.config_loader import load_or_create_config
 
 
