@@ -8,7 +8,6 @@ arXiv:
 
 
 news_source:
-  enabled: true  # 是否启用
   sources: # 不想使用的源可以注释掉
     - id: v2ex-share
       name: V2EX-最新分享
@@ -108,7 +107,6 @@ news_source:
     #   name: 爱奇艺-热播榜
 
 rss:
-  enabled: true
   freshness_filter:
     enabled: true                     # 是否启用新鲜度过滤（默认启用）
 

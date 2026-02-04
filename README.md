@@ -4,6 +4,12 @@
 
 # future palns
 
+**LLM Assistance**
+- [ ] LLM-based Information retrieval
+- [ ] LLM-based Information reranking. Based on Prompts or user's action 
+- [ ] LLM-based Information summarize
+
+
 **More Information Sources**
 - [x] arXiv
 - [x] RSS
@@ -25,10 +31,6 @@
 
 
 
-**LLM Assistance**
-- [ ] LLM-based Information retrieval
-- [ ] LLM-based Information reranking
-- [ ] LLM-based Information summarize
 
 
 
