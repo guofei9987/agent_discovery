@@ -52,6 +52,7 @@ class ArxivFetcher:
                     "url": item.entry_id,  # arxiv entry_id is also the URL
                     "content": item.summary,
                     "published_at": item.published
+                    , "source_type": "arXiv"
                 })
 
             print(f"✅ 【arXiv】获取成功: 查询='{search_query}', 条目数: {len(papers)}")

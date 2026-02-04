@@ -50,7 +50,7 @@ class DatabaseManager:
                             content=article_data.get("content", ""),
                             url=article_data["url"],
                             source=article_data["platform_name"],
-                            source_type=article_data.get("source_type", "rss"),
+                            source_type=article_data.get("source_type", "no"),
                             published_at=article_data.get("published_at", datetime.now()),
                         )
                         session.add(article)

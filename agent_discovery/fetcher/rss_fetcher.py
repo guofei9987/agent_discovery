@@ -102,6 +102,7 @@ class RSSFetcher:
                 "news_title": title,
                 "url": link,
                 "published_at": published_at
+                , "source_type": "rss"
             }
 
             return article
