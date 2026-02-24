@@ -1,5 +1,7 @@
 arXiv:
   lifecycle_days: 180 # 生命周期
+  #  如果为 0 则丢弃数据库中所有条目，仅最新的生效
+  #  如果为 -1 则不丢弃任何条目，所有条目都生效
   # query 直接沿用 arXiv 的 query 语法：
   # https://arxiv.org/help/api/user-manual#query_details
   queries:
@@ -19,7 +21,7 @@ news_source:
     - id: weibo
       name: 微博-实时热搜
     - id: zaobao
-      name: 联合早报 
+      name: 联合早报
     # - id: coolapk
     #   name: 酷安-今日最热
     - id: mktnews-flash
@@ -110,21 +112,19 @@ news_source:
     #   name: 爱奇艺-热播榜
 
 rss:
-  lifecycle_days: 60
   freshness_filter:
     enabled: true                     # 是否启用新鲜度过滤（默认启用）
-
-    max_age_days: 3                   # 最大文章年龄（天）
+    lifecycle_days: 30
   feeds:
     - id: "hacker-news"
       name: "Hacker News"
       url: "https://hnrss.org/frontpage"
-      # max_age_days: 1               # 示例：只推送1天内的文章
+      # lifecycle_days: 1
 
     - id: "ruanyifeng"
       name: "阮一峰的网络日志"
       url: "http://www.ruanyifeng.com/blog/atom.xml"
-      # max_age_days: 7               # 示例：推送7天内的文章（更新较慢的博客）
+      # lifecycle_days: 7
 
     - id: "yahoo-finance"
       name: "雅虎财经"

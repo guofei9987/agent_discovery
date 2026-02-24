@@ -40,18 +40,18 @@ class RSSFetcher:
             print(f"❌ 【RSS】获取失败 {rss_url}: {e}")
             return None
 
-    def is_article_fresh(self, entry: Dict, max_age_days: int) -> bool:
+    def is_article_fresh(self, entry: Dict, lifecycle_days: int) -> bool:
         """
         检查文章是否足够新鲜
 
         Args:
             entry: RSS条目
-            max_age_days: 最大文章年龄（天）
+            lifecycle_days: 最大文章年龄（天）
 
         Returns:
             是否足够新鲜
         """
-        if max_age_days <= 0:
+        if lifecycle_days <= 0:
             return True  # 禁用过滤
 
         # 提取发布时间
@@ -65,7 +65,7 @@ class RSSFetcher:
             return True  # 没有发布时间，不过滤
 
         # 检查文章年龄
-        max_age = timedelta(days=max_age_days)
+        max_age = timedelta(days=lifecycle_days)
         article_age = datetime.now() - published_at
         return article_age <= max_age
 
@@ -110,14 +110,14 @@ class RSSFetcher:
             print(f"解析文章失败: {e}")
             return None
 
-    def fetch_articles_from_rss(self, rss_url: str, source_name: str = "Unknown", max_age_days: int = 3) -> List[Dict]:
+    def fetch_articles_from_rss(self, rss_url: str, source_name: str = "Unknown", lifecycle_days: int = 3) -> List[Dict]:
         """
         从RSS源获取文章列表
 
         Args:
             rss_url: RSS源URL
             source_name: 来源名称
-            max_age_days: 最大文章年龄（天）
+            lifecycle_days: 最大文章年龄（天）
 
         Returns:
             统一格式的文章字典列表
@@ -132,7 +132,7 @@ class RSSFetcher:
         # 解析每个条目
         for entry in feed.entries:
             # 检查文章新鲜度
-            if not self.is_article_fresh(entry, max_age_days):
+            if not self.is_article_fresh(entry, lifecycle_days):
                 continue
 
             article = self.parse_article(entry, rss_url, source_name)
@@ -154,7 +154,7 @@ class RSSFetcher:
 
         # 获取全局新鲜度设置
         freshness_config = cfg.get('rss', {}).get('freshness_filter', {})
-        global_max_age_days = freshness_config.get('max_age_days', 3)
+        global_lifecycle_days = freshness_config.get('lifecycle_days', 3)
 
         # 获取RSS源列表
         feeds = cfg.get('rss', {}).get('feeds', [])
@@ -165,9 +165,9 @@ class RSSFetcher:
             source_name = feed_config['name']
 
             # 获取该源的新鲜度设置（覆盖全局设置）
-            max_age_days = feed_config.get('max_age_days', global_max_age_days)
+            lifecycle_days = feed_config.get('lifecycle_days', global_lifecycle_days)
 
-            articles = self.fetch_articles_from_rss(rss_url, source_name, max_age_days)
+            articles = self.fetch_articles_from_rss(rss_url, source_name, lifecycle_days)
             all_articles.extend(articles)
 
         print(f"从 {len(feeds)} 个平台，获取了 {len(all_articles)} 条RSS")
