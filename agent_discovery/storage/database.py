@@ -46,7 +46,7 @@ class DatabaseManager:
                     if not existing_article:
                         # 创建新文章
                         article = Article(
-                            title=article_data["news_title"],
+                            title=article_data["title"],
                             content=article_data.get("content", ""),
                             url=article_data["url"],
                             source=article_data["platform_name"],
@@ -56,7 +56,7 @@ class DatabaseManager:
                         session.add(article)
                         saved_count += 1
                 except Exception as e:
-                    print(f"处理文章失败: {article_data.get('news_title', 'Unknown')}, 错误: {e}")
+                    print(f"处理文章失败: {article_data.get('title', 'Unknown')}, 错误: {e}")
                     # 继续处理其他文章，不中断整个过程
                     continue
 

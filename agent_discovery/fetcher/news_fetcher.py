@@ -65,7 +65,7 @@ class NewsFetcher(object):
                     "platform_id": platform_id
                     , "platform_name": platform_name
                     , "news_id": news_one['id']
-                    , "news_title": news_one['title']
+                    , "title": news_one['title']
                     , "url": news_one['url']
                     # ❗️很多源没有时间，用当前时间
                     , "published_at": datetime.now()

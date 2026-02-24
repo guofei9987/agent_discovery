@@ -99,7 +99,7 @@ class RSSFetcher:
                 "platform_id": f"rss_{source_name.lower().replace(' ', '_')}",
                 "platform_name": source_name,
                 "news_id": link,  # 使用链接作为ID
-                "news_title": title,
+                "title": title,
                 "url": link,
                 "published_at": published_at
                 , "source_type": "rss"
@@ -137,7 +137,7 @@ class RSSFetcher:
                 continue
 
             article = self.parse_article(entry, rss_url, source_name)
-            if article and article['news_title'] and article['url']:
+            if article and article['title'] and article['url']:
                 articles.append(article)
 
         return articles

@@ -19,7 +19,7 @@ for item in results:
         "platform_id": "arXiv",
         "platform_name": "arXiv",
         "news_id": item.entry_id,
-        "news_title": item.title,
+        "title": item.title,
         "url": item.entry_id,  # arxiv entry_id is also the URL
         "content": item.summary,
         "published_at": item.published
