@@ -14,7 +14,6 @@ from importlib import resources
 
 from agent_discovery.storage.models import Article
 from agent_discovery.storage.database import database_manager
-from agent_discovery.fetcher.rss_fetcher import RSSFetcher
 from agent_discovery.fetcher import fetch_all_msg
 from agent_discovery.config_loader import load_or_create_config
 
@@ -165,7 +164,6 @@ async def fetch_news():
     try:
         cfg = load_or_create_config()
 
-        # ❗️ enabled 的逻辑还没写
         all_articles = fetch_all_msg(cfg)
         database_manager.save_articles_to_db(all_articles)
 
