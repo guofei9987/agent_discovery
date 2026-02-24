@@ -124,8 +124,20 @@ rss:
     lifecycle_days: 1
 
 
-    # 自定义源示例
-    # - id: "custom-feed"
-    #   name: "自定义源"
-    #   url: "https://example.com/feed.xml"
-    #   lifecycle_days: 0               # 示例：禁用过滤，推送所有文章
+# LLM 配置
+llm:
+  # 摘要功能配置
+  summarize:
+    model: "DeepSeek-V3.2" # 模型
+    api_base: "https://api.deepseek.com/v1" # LLM 的 api
+    api_key_env: "DEEPSEEK_API_KEY" # api_key 请放入环境变量中，不要明文填入
+    provider: "openai"  # 使用 openai 兼容接口
+    stream: true  # 启用流式输出
+  
+  # 未来可添加其他功能模块
+  # arxiv_analyze:
+  #   model: "gpt-4"
+  #   api_base: "https://api.openai.com/v1"
+  #   api_key_env: "OPENAI_API_KEY"
+  #   provider: "openai"
+  #   stream: true
