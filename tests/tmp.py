@@ -15,13 +15,14 @@ results = client.results(search)
 
 papers = []
 for item in results:
-    papers.append({
-        "platform_id": "arXiv",
-        "platform_name": "arXiv",
-        "news_id": item.entry_id,
-        "title": item.title,
-        "url": item.entry_id,  # arxiv entry_id is also the URL
-        "content": item.summary,
-        "published_at": item.published
-    })
+    print(item)
+    # papers.append({
+    #     "platform_id": "arXiv",
+    #     "platform_name": "arXiv",
+    #     "news_id": item.entry_id,
+    #     "title": item.title,
+    #     "url": item.entry_id,  # arxiv entry_id is also the URL
+    #     "content": item.summary,
+    #     "published_at": item.published
+    # })
 #%%

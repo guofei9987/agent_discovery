@@ -96,13 +96,12 @@ class RSSFetcher:
 
             # 创建统一格式的文章字典
             article = {
-                "platform_id": f"rss_{source_name.lower().replace(' ', '_')}",
-                "platform_name": source_name,
-                "news_id": link,  # 使用链接作为ID
                 "title": title,
                 "url": link,
-                "published_at": published_at
-                , "source_type": "rss"
+                "source": source_name,
+                "source_type": "rss",
+                "published_at": published_at,
+                "fetched_at": datetime.now()
             }
 
             return article

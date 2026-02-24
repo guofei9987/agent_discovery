@@ -7,7 +7,7 @@ from datetime import datetime
 from .models import Base, init_database, Article
 
 # 确保data目录存在
-DATA_DIR = "./data"
+DATA_DIR = "./agent_discovery_config"
 DB_PATH = os.path.join(DATA_DIR, "news.db")
 DB_URL = f"sqlite:///{DB_PATH}"
 COLD_DB_PATH = os.path.join(DATA_DIR, "cold_storage.db")
@@ -49,9 +49,10 @@ class DatabaseManager:
                             title=article_data["title"],
                             content=article_data.get("content", ""),
                             url=article_data["url"],
-                            source=article_data["platform_name"],
+                            source=article_data["source"],
                             source_type=article_data.get("source_type", "no source type"),
                             published_at=article_data.get("published_at", datetime.now()),
+                            fetched_at=article_data.get("fetched_at", datetime.now()),
                         )
                         session.add(article)
                         saved_count += 1

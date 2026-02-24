@@ -3,6 +3,7 @@ Arxiv论文获取器
 """
 
 import arxiv
+from datetime import datetime
 from typing import List, Dict, Optional
 
 
@@ -45,14 +46,13 @@ class ArxivFetcher:
             papers = []
             for item in results:
                 papers.append({
-                    "platform_id": "arXiv",
-                    "platform_name": "arXiv",
-                    "news_id": item.entry_id,
                     "title": item.title,
-                    "url": item.entry_id,  # arxiv entry_id is also the URL
                     "content": item.summary,
-                    "published_at": item.published
-                    , "source_type": "arXiv"
+                    "url": item.entry_id,  # 带版本号的 url，未来是否去除？
+                    "source": "arXiv",
+                    "source_type": "arXiv",
+                    "published_at": item.published,
+                    "fetched_at": datetime.now()
                 })
 
             print(f"✅ 【arXiv】获取成功: 查询='{search_query}', 条目数: {len(papers)}")

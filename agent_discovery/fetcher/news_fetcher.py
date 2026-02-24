@@ -62,14 +62,14 @@ class NewsFetcher(object):
 
             for news_one in news_one_platform:
                 news_all.append({
-                    "platform_id": platform_id
-                    , "platform_name": platform_name
-                    , "news_id": news_one['id']
-                    , "title": news_one['title']
+                    "title": news_one['title']
                     , "url": news_one['url']
+                    , "source": platform_name
+                    , "source_type": "newsnow"
                     # ❗️很多源没有时间，用当前时间
                     , "published_at": datetime.now()
-                    , "source_type": "newsnow"
+                    , "fetched_at": datetime.now()
+
                 })
 
         print(f"从 {len(platforms)} 个平台，获取了 {len(news_all)} 条新闻")
