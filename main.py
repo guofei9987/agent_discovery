@@ -53,9 +53,9 @@ def main():
             articles = rss_fetcher.fetch_all_rss()
             # 这里应该保存文章到数据库，但为了简化，我们只返回文章数量
             saved_count = len(articles)
-            logger.info(f"新闻获取完成，获取了 {saved_count} 篇文章")
+            logger.info(f"✅ 新闻获取完成，获取了 {saved_count} 篇文章")
         except Exception as e:
-            logger.error(f"新闻获取失败: {e}")
+            logger.error(f"❌ 新闻获取失败: {e}")
     elif args.action == "test":
         # 运行测试
         logger.info("运行测试...")

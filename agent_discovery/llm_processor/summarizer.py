@@ -11,7 +11,7 @@ from loguru import logger
 
 from agent_discovery.storage.database import database_manager
 from agent_discovery.storage.models import Article
-from agent_discovery.config_loader import load_or_create_config
+from agent_discovery.config_loader import load_or_create_config, load_or_create_prompt
 
 
 class LLMSummarizer:
@@ -34,6 +34,7 @@ class LLMSummarizer:
         self.api_key_env = config.get("api_key_env", "DEEPSEEK_API_KEY")
         self.provider = config.get("provider", "openai")
         self.stream_enabled = config.get("stream", True)
+        self.sys_prompt = load_or_create_prompt()['summary']
 
         # 获取 API Key
         self.api_key = os.getenv(self.api_key_env)
@@ -78,8 +79,8 @@ class LLMSummarizer:
         for i, article in enumerate(articles, 1):
             content = article.content or article.summary or ""
             # 限制内容长度，避免超出上下文限制
-            if len(content) > 2000:
-                content = content[:2000] + "..."
+            if len(content) > 5000:
+                content = content[:5000] + "..."
 
             formatted.append(f"""[{i}] 标题: {article.title}
 来源: {article.source}
@@ -98,16 +99,7 @@ class LLMSummarizer:
         Returns:
             完整的提示词
         """
-        return f"""你是一个智能新闻摘要助手。请阅读以下新闻文章，并生成一个综合摘要。
-
-要求：
-1. 提取重要的新闻要点
-2. 按主题分类组织
-3. 突出关键信息和时间节点
-4. 使用简洁清晰的语言
-5. 摘要长度控制在 500-800 字
-
-以下是待摘要的文章：
+        return f"""以下是待摘要的文章：
 
 {articles_text}
 
@@ -143,11 +135,12 @@ class LLMSummarizer:
             stream = await self.client.chat.completions.create(
                 model=self.model,
                 messages=[
+                    {"role": "user", "content": self.sys_prompt},
                     {"role": "user", "content": prompt}
                 ],
                 stream=True,
                 temperature=0.7,
-                max_tokens=2000
+                max_tokens=5000
             )
 
             async for chunk in stream:

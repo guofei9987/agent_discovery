@@ -37,7 +37,7 @@ app.add_middleware(
 )
 
 # 摘要缓存
-_latest_summaries = {
+_latest_summary = {
     "content": "",
     "generated_at": None,
     "is_generating": False
