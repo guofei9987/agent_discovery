@@ -181,6 +181,66 @@
             margin: 1rem 0;
         }
 
+
+        /* AI 摘要区域样式 */
+        .ai-summary {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .ai-summary h2 {
+            margin-top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .ai-summary .timestamp {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: normal;
+        }
+
+        .ai-summary .summary-content {
+            line-height: 1.8;
+            white-space: pre-wrap;
+            color: var(--text-color);
+            min-height: 100px;
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .ai-summary .summary-content.streaming {
+            background-color: #e8f4f8;
+        }
+
+        .ai-summary .summary-controls {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .ai-summary .generating-indicator {
+            color: var(--secondary-color);
+            font-style: italic;
+        }
+
+        .ai-summary .empty-state {
+            color: #666;
+            font-style: italic;
+            text-align: center;
+            padding: 2rem;
+        }
+
         @media (max-width: 768px) {
             .news-grid {
                 grid-template-columns: 1fr;
@@ -213,6 +273,23 @@
                 <p>加载中...</p>
             </div>
         </div>
+
+
+        <div class="ai-summary">
+            <h2>
+                <span>🤖 AI 智能摘要</span>
+                <span class="timestamp" id="aiSummaryTime"></span>
+            </h2>
+            <div id="aiSummaryContent" class="summary-content">
+                <div class="empty-state">点击"生成摘要"按钮获取 AI 智能摘要</div>
+            </div>
+            <div class="summary-controls">
+                <button id="generateSummaryBtn">生成摘要</button>
+                <span id="generatingIndicator" class="generating-indicator" style="display: none;">正在生成...</span>
+            </div>
+        </div>
+
+
 
         <div class="filter-section">
             <h2>过滤器</h2>
@@ -262,7 +339,7 @@
         </div>
     </div>
 
-    <script>
+   <script>
         // API基础URL
         const API_BASE = 'http://localhost:8000';
 
@@ -276,6 +353,10 @@
         const sentimentFilter = document.getElementById('sentimentFilter');
         const sortBySelect = document.getElementById('sortBy');
         const searchInput = document.getElementById('searchInput');
+        const aiSummaryContent = document.getElementById('aiSummaryContent');
+        const aiSummaryTime = document.getElementById('aiSummaryTime');
+        const generateSummaryBtn = document.getElementById('generateSummaryBtn');
+        const generatingIndicator = document.getElementById('generatingIndicator');
 
         // 当前过滤条件
         let currentFilters = {
@@ -285,16 +366,21 @@
             search: ''
         };
 
+        // 当前生成的摘要内容
+        let currentSummaryContent = '';
+
         // 页面加载时初始化
         document.addEventListener('DOMContentLoaded', function() {
             loadStats();
             loadSources();
             loadNews();
+            loadLatestSummary();
         });
 
         // 绑定事件监听器
         refreshBtn.addEventListener('click', loadNews);
         fetchBtn.addEventListener('click', fetchNews);
+        generateSummaryBtn.addEventListener('click', streamGenerateSummary);
 
         // 过滤器事件监听
         sourceFilter.addEventListener('change', function() {
@@ -493,6 +579,113 @@
                 hour: '2-digit',
                 minute: '2-digit'
             });
+        }
+
+        // ==================== AI 摘要相关功能 ====================
+
+        // 加载最新的摘要（非流式）
+        async function loadLatestSummary() {
+            try {
+                const response = await fetch(`${API_BASE}/summaries`);
+                const data = await response.json();
+
+                if (data.content) {
+                    currentSummaryContent = data.content;
+                    displaySummary(data.content, data.generated_at);
+                }
+
+                if (data.is_generating) {
+                    // 如果正在生成，自动连接到流
+                    connectToSummaryStream();
+                }
+            } catch (error) {
+                console.error('加载最新摘要失败:', error);
+            }
+        }
+
+        // 显示摘要内容
+        function displaySummary(content, generatedAt) {
+            aiSummaryContent.innerHTML = escapeHtml(content);
+
+            if (generatedAt) {
+                const date = new Date(generatedAt);
+                aiSummaryTime.textContent = `生成时间: ${formatDate(date.toISOString())}`;
+            } else {
+                aiSummaryTime.textContent = '';
+            }
+        }
+
+        // 流式生成摘要
+        async function streamGenerateSummary() {
+            if (generateSummaryBtn.disabled) return;
+
+            // 重置状态
+            currentSummaryContent = '';
+            aiSummaryContent.innerHTML = '';
+            aiSummaryContent.classList.add('streaming');
+            generateSummaryBtn.disabled = true;
+            generatingIndicator.style.display = 'inline';
+            aiSummaryTime.textContent = '正在生成摘要...';
+
+            connectToSummaryStream();
+        }
+
+        // 连接到 SSE 流
+        function connectToSummaryStream() {
+            const eventSource = new EventSource(`${API_BASE}/summaries/stream`);
+
+            eventSource.onmessage = (event) => {
+                const data = event.data;
+
+                if (data === '[DONE]') {
+                    // 流结束
+                    eventSource.close();
+                    finishSummaryGeneration();
+                    return;
+                }
+
+                if (data.startsWith('[错误:')) {
+                    // 发生错误
+                    aiSummaryContent.innerHTML += escapeHtml(data);
+                    eventSource.close();
+                    finishSummaryGeneration();
+                    return;
+                }
+
+                // 追加内容
+                currentSummaryContent += data;
+                // 实时更新显示（保留换行）
+                aiSummaryContent.innerHTML = escapeHtml(currentSummaryContent);
+                // 自动滚动到底部
+                aiSummaryContent.scrollTop = aiSummaryContent.scrollHeight;
+            };
+
+            eventSource.onerror = (error) => {
+                console.error('SSE 连接错误:', error);
+                eventSource.close();
+
+                if (!currentSummaryContent) {
+                    aiSummaryContent.innerHTML = '<div class="empty-state">生成摘要失败，请重试</div>';
+                }
+
+                finishSummaryGeneration();
+            };
+
+            eventSource.onopen = () => {
+                console.log('SSE 连接已建立');
+            };
+        }
+
+        // 完成摘要生成
+        function finishSummaryGeneration() {
+            aiSummaryContent.classList.remove('streaming');
+            generateSummaryBtn.disabled = false;
+            generatingIndicator.style.display = 'none';
+
+            if (currentSummaryContent) {
+                const now = new Date();
+                aiSummaryTime.textContent = `生成时间: ${formatDate(now.toISOString())}`;
+            }
         }
     </script>
 </body>

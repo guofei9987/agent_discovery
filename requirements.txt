@@ -17,3 +17,6 @@ loguru
 # 数据库和ORM
 sqlalchemy
 alembic
+
+# LLM相关
+openai>=1.0.0

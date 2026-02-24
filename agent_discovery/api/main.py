@@ -4,6 +4,7 @@
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from typing import List, Optional
 from datetime import datetime, timedelta
 from pydantic import BaseModel
@@ -16,6 +17,8 @@ from agent_discovery.storage.models import Article
 from agent_discovery.storage.database import database_manager
 from agent_discovery.fetcher import fetch_all_msg
 from agent_discovery.config_loader import load_or_create_config
+from agent_discovery.llm_processor.summarizer import get_summarizer
+import asyncio
 
 # 创建FastAPI应用
 app = FastAPI(
@@ -32,6 +35,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 摘要缓存
+_latest_summaries = {
+    "content": "",
+    "generated_at": None,
+    "is_generating": False
+}
 
 
 # Pydantic模型定义
@@ -163,7 +173,7 @@ async def get_article(article_id: int):
 @app.post("/fetch", response_model=FetchResult)
 async def fetch_news():
     """
-    手动触发新闻获取
+    手动触发新闻获取，然后自动生成摘要
     """
     try:
         cfg = load_or_create_config()
@@ -171,9 +181,12 @@ async def fetch_news():
         all_articles = fetch_all_msg(cfg)
         database_manager.archive_and_add_articles(all_articles)
 
+        # 开始生成摘要
+        asyncio.create_task(auto_generate_summary_after_fetch())
+
         return FetchResult(
             success=True,
-            message=f"成功获取并保存了 {len(all_articles)} 篇文章 ",
+            message=f"成功获取并保存了 {len(all_articles)} 篇文章",
             articles_fetched=len(all_articles)
         )
     except Exception as e:
@@ -237,6 +250,117 @@ async def get_stats():
         raise HTTPException(status_code=500, detail="获取统计信息失败")
     finally:
         session.close()
+
+
+async def _generate_summary_stream():
+    """内部生成摘要的流式生成器"""
+    global _latest_summary
+
+    _latest_summary["is_generating"] = True
+    _latest_summary["content"] = ""
+
+    summarizer = get_summarizer()
+    full_content = []
+
+    try:
+        async for chunk in summarizer.generate_summary_stream():
+            full_content.append(chunk)
+            # SSE 格式：data: <内容>\n\n
+            yield f"data: {chunk}\n\n"
+
+        # 存储完整摘要
+        _latest_summary["content"] = "".join(full_content)
+        _latest_summary["generated_at"] = datetime.now().isoformat()
+        logger.info("摘要生成完成")
+
+    except Exception as e:
+        logger.error(f"生成摘要流失败: {e}")
+        yield f"data: [错误: {str(e)}]\n\n"
+    finally:
+        _latest_summary["is_generating"] = False
+        # 发送结束标记
+        yield "data: [DONE]\n\n"
+
+
+@app.get("/summaries/stream")
+async def get_summary_stream():
+    """
+    流式获取 AI 生成的摘要
+    使用 SSE (Server-Sent Events) 格式
+    """
+    return StreamingResponse(
+        _generate_summary_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no"  # 禁用 Nginx 缓冲
+        }
+    )
+
+
+@app.get("/summaries")
+async def get_summary():
+    """
+    获取最新的 AI 摘要（非流式）
+    """
+    return {
+        "content": _latest_summary["content"],
+        "generated_at": _latest_summary["generated_at"],
+        "is_generating": _latest_summary["is_generating"]
+    }
+
+
+@app.post("/summaries/generate")
+async def trigger_summary_generation():
+    """
+    手动触发摘要生成（用于测试或重新生成）
+    """
+    if _latest_summary["is_generating"]:
+        return {
+            "success": False,
+            "message": "摘要正在生成中，请稍后再试"
+        }
+
+    # 返回流式响应
+    return StreamingResponse(
+        _generate_summary_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive"
+        }
+    )
+
+
+async def auto_generate_summary_after_fetch():
+    """
+    在获取新闻后自动触发摘要生成
+    """
+    if _latest_summary["is_generating"]:
+        logger.info("摘要正在生成中，跳过本次自动生成")
+        return
+
+    logger.info("开始自动生成摘要...")
+
+    # 非流式生成，存储到内存
+    summarizer = get_summarizer()
+    chunks = []
+
+    try:
+        _latest_summary["is_generating"] = True
+        async for chunk in summarizer.generate_summary_stream():
+            chunks.append(chunk)
+
+        _latest_summary["content"] = "".join(chunks)
+        _latest_summary["generated_at"] = datetime.now().isoformat()
+        logger.info("自动生成摘要完成")
+
+    except Exception as e:
+        logger.error(f"自动生成摘要失败: {e}")
+        _latest_summary["content"] = f"生成摘要失败: {str(e)}"
+    finally:
+        _latest_summary["is_generating"] = False
 
 
 if __name__ == "__main__":

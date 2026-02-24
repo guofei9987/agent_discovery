@@ -5,9 +5,9 @@
 # future palns
 
 **LLM Assistance**
+- [x] LLM-based Information summarize
 - [ ] LLM-based Information retrieval
 - [ ] LLM-based Information reranking. Based on Prompts or user's action 
-- [ ] LLM-based Information summarize
 
 
 **More Information Sources**
