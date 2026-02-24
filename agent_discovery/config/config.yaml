@@ -12,7 +12,7 @@ arXiv:
 
 
 news_source:
-  lifecycle_days: 1
+  lifecycle_days: 0
   sources: # 不想使用的源可以注释掉
     - id: v2ex-share
       name: V2EX-最新分享
@@ -112,28 +112,25 @@ news_source:
     #   name: 爱奇艺-热播榜
 
 rss:
-  freshness_filter:
-    enabled: true                     # 是否启用新鲜度过滤（默认启用）
-    lifecycle_days: 30
   feeds:
     - id: "hacker-news"
       name: "Hacker News"
       url: "https://hnrss.org/frontpage"
-      # lifecycle_days: 1
+      lifecycle_days: 2
 
     - id: "ruanyifeng"
       name: "阮一峰的网络日志"
       url: "http://www.ruanyifeng.com/blog/atom.xml"
-      # lifecycle_days: 7
+      lifecycle_days: 7
 
     - id: "yahoo-finance"
       name: "雅虎财经"
       url: "https://finance.yahoo.com/news/rssindex"
+      lifecycle_days: 1
 
 
     # 自定义源示例
     # - id: "custom-feed"
     #   name: "自定义源"
     #   url: "https://example.com/feed.xml"
-    #   enabled: false
-    #   max_age_days: 0               # 示例：禁用过滤，推送所有文章
+    #   lifecycle_days: 0               # 示例：禁用过滤，推送所有文章

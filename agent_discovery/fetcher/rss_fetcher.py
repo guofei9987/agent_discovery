@@ -110,7 +110,8 @@ class RSSFetcher:
             print(f"解析文章失败: {e}")
             return None
 
-    def fetch_articles_from_rss(self, rss_url: str, source_name: str = "Unknown", lifecycle_days: int = 3) -> List[Dict]:
+    def fetch_articles_from_rss(self, rss_url: str, source_name: str = "Unknown"
+                                , lifecycle_days: int = 3) -> List[Dict]:
         """
         从RSS源获取文章列表
 
@@ -152,10 +153,6 @@ class RSSFetcher:
 
         all_articles = []
 
-        # 获取全局新鲜度设置
-        freshness_config = cfg.get('rss', {}).get('freshness_filter', {})
-        global_lifecycle_days = freshness_config.get('lifecycle_days', 3)
-
         # 获取RSS源列表
         feeds = cfg.get('rss', {}).get('feeds', [])
 
@@ -165,7 +162,7 @@ class RSSFetcher:
             source_name = feed_config['name']
 
             # 获取该源的新鲜度设置（覆盖全局设置）
-            lifecycle_days = feed_config.get('lifecycle_days', global_lifecycle_days)
+            lifecycle_days = feed_config.get('lifecycle_days', -1)
 
             articles = self.fetch_articles_from_rss(rss_url, source_name, lifecycle_days)
             all_articles.extend(articles)
