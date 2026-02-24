@@ -17,7 +17,6 @@ from agent_discovery.storage.database import database_manager
 from agent_discovery.fetcher import fetch_all_msg
 from agent_discovery.config_loader import load_or_create_config
 
-
 # 创建FastAPI应用
 app = FastAPI(
     title="新闻聚合器API",
@@ -38,18 +37,23 @@ app.add_middleware(
 # Pydantic模型定义
 class ArticleResponse(BaseModel):
     id: int
+
     title: str
-    summary: Optional[str]
     content: Optional[str]
+    summary: Optional[str]
     url: str
+
     source: str
     source_type: str
+
     published_at: datetime
-    language: str
+    fetched_at: datetime
+
     ai_summary: Optional[str]
     ai_keywords: Optional[List[str]]
     ai_sentiment: Optional[float]
     ai_importance: Optional[float]
+
     is_filtered: Optional[bool]
 
     class Config:

@@ -21,54 +21,30 @@ from sqlalchemy import (
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from datetime import datetime
-import enum
 
 Base = declarative_base()
-
-
-class NewsCategory(str, enum.Enum):
-    """新闻分类"""
-    POLITICS = "politics"
-    BUSINESS = "business"
-    TECHNOLOGY = "technology"
-    SCIENCE = "science"
-    HEALTH = "health"
-    SPORTS = "sports"
-    ENTERTAINMENT = "entertainment"
-    GENERAL = "general"
-
-
-class NewsSource(str, enum.Enum):
-    """新闻来源类型"""
-    RSS = "rss"
-    NEWSAPI = "newsapi"
-    CUSTOM_API = "custom_api"
 
 
 class Article(Base):
     """新闻文章表"""
     __tablename__ = "articles"
 
+    # 自增 id
     id = Column(Integer, primary_key=True, autoincrement=True)
+
     # 基本信息
     title = Column(String(500), nullable=False, index=True)
     content = Column(Text, nullable=True)
     summary = Column(Text, nullable=True)
     url = Column(String(1000), unique=True, nullable=False)
-    source_url = Column(String(1000), nullable=True)
 
     # 来源信息
     source = Column(String(100), nullable=False)  # 来源网站名称
-    source_type = Column(String(20), nullable=False)  # 使用NewsSource枚举
+    source_type = Column(String(20), nullable=False)  # 来源类型（大类），如newsnow、arXiv等
 
     # 时间信息
     published_at = Column(DateTime, nullable=False, index=True)
     fetched_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-
-    # 分类和标签
-    category = Column(String(50), nullable=True, index=True)  # 使用NewsCategory枚举
-    language = Column(String(10), default="zh", nullable=False)
-    tags = Column(JSON, nullable=True)  # 标签列表，JSON格式存储
 
     # AI分析结果
     ai_summary = Column(Text, nullable=True)  # AI生成的摘要
@@ -76,15 +52,15 @@ class Article(Base):
     ai_sentiment = Column(Float, nullable=True)  # 情感分析得分(-1到1)
     ai_importance = Column(Float, nullable=True)  # 重要性评分(0-1)
 
-    # 状态和标记
+    # 状态和标记，预留字段
     is_archived = Column(Boolean, default=False, index=True)  # 是否已归档
     archived_date = Column(String(10), nullable=True)  # 归档日期 YYYY_MM
     is_filtered = Column(Boolean, default=False)  # 是否被过滤掉
 
     # 用户交互统计（计算字段，非直接存储）
+    view_count = Column(Integer, default=0)
     like_count = Column(Integer, default=0)
     dislike_count = Column(Integer, default=0)
-    view_count = Column(Integer, default=0)
 
     # 关系
     user_interactions = relationship("UserInteraction", back_populates="article", cascade="all, delete-orphan")
