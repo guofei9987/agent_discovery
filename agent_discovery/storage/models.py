@@ -45,7 +45,7 @@ class Article(Base):
     # 时间信息
     published_at = Column(DateTime, nullable=False, index=True)
     fetched_at = Column(DateTime, default=datetime.now(), nullable=False)
-    lifecycle_days = Column(Integer, nullable=False, default=-1)  # 生命周期（天），-1 表示不限制
+    lifecycle_days = Column(Integer, nullable=False, default=3600)  # 生命周期（天），-1 表示不限制
 
     # AI分析结果
     ai_summary = Column(Text, nullable=True)  # AI生成的摘要

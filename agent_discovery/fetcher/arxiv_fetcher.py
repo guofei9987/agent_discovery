@@ -21,7 +21,7 @@ class ArxivFetcher:
         self.client = arxiv.Client()
 
     def fetch_one(self, search_query: str, max_results: Optional[int] = None,
-                  lifecycle_days: int = -1) -> List[Dict]:
+                  lifecycle_days: int = 3600) -> List[Dict]:
         """
         根据查询获取arxiv论文
 
@@ -86,7 +86,7 @@ class ArxivFetcher:
             paper = self.fetch_one(
                 query_case['query'],
                 max_results=query_case.get('max_results', 5),
-                lifecycle_days=query_case.get('lifecycle_days', 180),
+                lifecycle_days=query_case.get('lifecycle_days', 3600),
             )
             papers.extend(paper)
 

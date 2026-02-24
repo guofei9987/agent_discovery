@@ -1,7 +1,7 @@
 arXiv:
   - query: "transformer"
     max_results: 10
-    lifecycle_days: 180 # 生命周期，0 为每次最新，-1 为不丢弃任何条目
+    lifecycle_days: 180 # 生命周期，0 表示每次最新时旧记录全部过期
   - query: '("llm" OR "large language model" OR "large language models")'
     max_results: 30
     lifecycle_days: 180

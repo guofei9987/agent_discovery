@@ -56,7 +56,7 @@ class NewsFetcher(object):
         print("获取新闻...")
         news_cfg = cfg.get('news_source', {})
         platforms = news_cfg.get('sources', list())
-        lifecycle_days = news_cfg.get('lifecycle_days', -1)
+        lifecycle_days = news_cfg.get('lifecycle_days', 3600)
         news_all = list()
         for platform in platforms:
             platform_id, platform_name = platform['id'], platform['name']

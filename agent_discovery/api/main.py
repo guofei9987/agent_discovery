@@ -169,7 +169,7 @@ async def fetch_news():
         cfg = load_or_create_config()
 
         all_articles = fetch_all_msg(cfg)
-        database_manager.save_articles_to_db(all_articles)
+        database_manager.archive_and_add_articles(all_articles)
 
         return FetchResult(
             success=True,
