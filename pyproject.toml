@@ -45,4 +45,9 @@ exclude = ["tests*", "data*", "venv*"]
 agent_discovery = [
   "config/*.yaml",
   "frontend/*.html",
+  "config/*.md"
 ]
+
+
+[project.scripts]
+agent-discovery = "agent_discovery.cli:main"

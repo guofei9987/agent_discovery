@@ -12,3 +12,6 @@ agent_discovery_config/
 
 *.db
 *.sqlite
+
+build/
+*.egg-info/

@@ -129,8 +129,8 @@ llm:
   # 摘要功能配置
   summarize:
     model: "DeepSeek-V3.2" # 模型
-    api_base: "https://api.deepseek.com/v1" # LLM 的 api
-    api_key_env: "DEEPSEEK_API_KEY" # api_key 请放入环境变量中，不要明文填入
+    api: "https://api.deepseek.com/v1" # LLM 的 api
+    api_key_env: "DEEPSEEK_API_KEY" # api_key 请放入环境变量中。不要填入明文！
     provider: "openai"  # 使用 openai 兼容接口
     stream: true  # 启用流式输出
   

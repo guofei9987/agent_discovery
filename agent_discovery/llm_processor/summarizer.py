@@ -30,7 +30,7 @@ class LLMSummarizer:
 
         self.config = config
         self.model = config.get("model", "DeepSeek-V3.2")
-        self.api_base = config.get("api_base", "https://api.deepseek.com/v1")
+        self.api = config.get("api", "https://api.deepseek.com/v1")
         self.api_key_env = config.get("api_key_env", "DEEPSEEK_API_KEY")
         self.provider = config.get("provider", "openai")
         self.stream_enabled = config.get("stream", True)
@@ -46,7 +46,7 @@ class LLMSummarizer:
         if self.api_key:
             self.client = AsyncOpenAI(
                 api_key=self.api_key,
-                base_url=self.api_base
+                base_url=self.api
             )
 
     async def get_unarchived_articles(self) -> List[Article]:
@@ -148,7 +148,7 @@ class LLMSummarizer:
                     yield chunk.choices[0].delta.content
 
         except Exception as e:
-            logger.error(f"生成摘要失败: {e}")
+            logger.error(f"生成摘要失败: {e}, {self.api}")
             yield f"\n\n生成摘要时出错: {str(e)}"
 
     async def generate_summary(self) -> str:

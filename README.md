@@ -37,33 +37,19 @@
 
 # How to Use
 
-<!-- ## 安装
+install
 
 ```shell
-pip install agent-discovery
+pip install agent-discovery --upgrade
 ```
 
-## 运行
 
-启动 API 服务：
 
 ```shell
-python -m agent_discovery.api.main
+agent-discovery start --backend-port 8000 --frontend-port 8080
 ```
 
-启动前端开发服务器：
-
-```shell
-python -m agent_discovery.frontend.server
-```
-
-首次运行会在当前目录生成默认配置目录 `agent_discovery_config`。
-
-## 本地开发 -->
-
-```shell
-sh start.sh
-```
+会在当前目录自动初始化配置，可以自己编辑。
 
 # 配置项
 
