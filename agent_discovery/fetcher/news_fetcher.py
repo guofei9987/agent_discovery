@@ -54,7 +54,9 @@ class NewsFetcher(object):
 
     def fetch_all(self, cfg):
         print("获取新闻...")
-        platforms = cfg.get('news_source', {}).get('sources', list())
+        news_cfg = cfg.get('news_source', {})
+        platforms = news_cfg.get('sources', list())
+        lifecycle_days = news_cfg.get('lifecycle_days', -1)
         news_all = list()
         for platform in platforms:
             platform_id, platform_name = platform['id'], platform['name']
@@ -69,6 +71,7 @@ class NewsFetcher(object):
                     # ❗️很多源没有时间，用当前时间
                     , "published_at": datetime.now()
                     , "fetched_at": datetime.now()
+                    , "lifecycle_days": lifecycle_days
 
                 })
 

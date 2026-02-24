@@ -20,13 +20,15 @@ class ArxivFetcher:
         self.max_results = max_results
         self.client = arxiv.Client()
 
-    def fetch_one(self, search_query: str, max_results: Optional[int] = None) -> List[Dict]:
+    def fetch_one(self, search_query: str, max_results: Optional[int] = None,
+                  lifecycle_days: int = -1) -> List[Dict]:
         """
         根据查询获取arxiv论文
 
         Args:
             search_query: 搜索查询词
             max_results: 最大返回结果数（覆盖初始化时的设置）
+            lifecycle_days: 生命周期（天）
 
         Returns:
             论文信息列表
@@ -35,6 +37,7 @@ class ArxivFetcher:
             max_results = self.max_results
 
         try:
+            # ❗️这里缺个逻辑：按照 lifecycle_days 过滤
             search = arxiv.Search(
                 query=search_query,
                 max_results=max_results,
@@ -52,7 +55,8 @@ class ArxivFetcher:
                     "source": "arXiv",
                     "source_type": "arXiv",
                     "published_at": item.published,
-                    "fetched_at": datetime.now()
+                    "fetched_at": datetime.now(),
+                    "lifecycle_days": lifecycle_days,
                 })
 
             print(f"✅ 【arXiv】获取成功: 查询='{search_query}', 条目数: {len(papers)}")
@@ -78,8 +82,12 @@ class ArxivFetcher:
             return list()
 
         papers = list()
-        for query_case in cfg['arXiv']['queries']:
-            paper = self.fetch_one(query_case['query'], max_results=query_case.get('max_results', 5))
+        for query_case in cfg['arXiv']:
+            paper = self.fetch_one(
+                query_case['query'],
+                max_results=query_case.get('max_results', 5),
+                lifecycle_days=query_case.get('lifecycle_days', 180),
+            )
             papers.extend(paper)
 
         print(f"从arXiv获取了 {len(papers)} 篇论文")

@@ -69,7 +69,8 @@ class RSSFetcher:
         article_age = datetime.now() - published_at
         return article_age <= max_age
 
-    def parse_article(self, entry: Dict, source_url: str, source_name: str) -> Optional[Dict]:
+    def parse_article(self, entry: Dict, source_url: str, source_name: str,
+                      lifecycle_days: int) -> Optional[Dict]:
         """
         解析RSS条目为统一格式
 
@@ -77,6 +78,7 @@ class RSSFetcher:
             entry: RSS条目
             source_url: RSS源URL
             source_name: 来源名称
+            lifecycle_days: 生命周期（天）
 
         Returns:
             统一格式的文章字典或None
@@ -101,7 +103,8 @@ class RSSFetcher:
                 "source": source_name,
                 "source_type": "rss",
                 "published_at": published_at,
-                "fetched_at": datetime.now()
+                "fetched_at": datetime.now(),
+                "lifecycle_days": lifecycle_days,
             }
 
             return article
@@ -135,7 +138,7 @@ class RSSFetcher:
             if not self.is_article_fresh(entry, lifecycle_days):
                 continue
 
-            article = self.parse_article(entry, rss_url, source_name)
+            article = self.parse_article(entry, rss_url, source_name, lifecycle_days)
             if article and article['title'] and article['url']:
                 articles.append(article)
 
@@ -153,18 +156,17 @@ class RSSFetcher:
         all_articles = []
 
         # 获取RSS源列表
-        feeds = cfg.get('rss', {}).get('feeds', [])
+        rss = cfg.get('rss', {})
 
         # 获取每个RSS源的文章
-        for feed_config in feeds:
+        for feed_config in rss:
             rss_url = feed_config['url']
             source_name = feed_config['name']
 
-            # 获取该源的新鲜度设置（覆盖全局设置）
-            lifecycle_days = feed_config.get('lifecycle_days', -1)
+            lifecycle_days = feed_config.get('lifecycle_days', 7)
 
             articles = self.fetch_articles_from_rss(rss_url, source_name, lifecycle_days)
             all_articles.extend(articles)
 
-        print(f"从 {len(feeds)} 个平台，获取了 {len(all_articles)} 条RSS")
+        print(f"从 {len(rss)} 个平台，获取了 {len(all_articles)} 条RSS")
         return all_articles

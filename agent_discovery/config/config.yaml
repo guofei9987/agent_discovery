@@ -1,14 +1,10 @@
 arXiv:
-  lifecycle_days: 180 # 生命周期
-  #  如果为 0 则丢弃数据库中所有条目，仅最新的生效
-  #  如果为 -1 则不丢弃任何条目，所有条目都生效
-  # query 直接沿用 arXiv 的 query 语法：
-  # https://arxiv.org/help/api/user-manual#query_details
-  queries:
-    - query: "transformer"
-      max_results: 10
-    - query: '("llm" OR "large language model" OR "large language models")'
-      max_results: 30
+  - query: "transformer"
+    max_results: 10
+    lifecycle_days: 180 # 生命周期，0 为每次最新，-1 为不丢弃任何条目
+  - query: '("llm" OR "large language model" OR "large language models")'
+    max_results: 30
+    lifecycle_days: 180
 
 
 news_source:
@@ -112,21 +108,20 @@ news_source:
     #   name: 爱奇艺-热播榜
 
 rss:
-  feeds:
-    - id: "hacker-news"
-      name: "Hacker News"
-      url: "https://hnrss.org/frontpage"
-      lifecycle_days: 2
+  - id: "hacker-news"
+    name: "Hacker News"
+    url: "https://hnrss.org/frontpage"
+    lifecycle_days: 2 # default: 7
 
-    - id: "ruanyifeng"
-      name: "阮一峰的网络日志"
-      url: "http://www.ruanyifeng.com/blog/atom.xml"
-      lifecycle_days: 7
+  - id: "ruanyifeng"
+    name: "阮一峰的网络日志"
+    url: "http://www.ruanyifeng.com/blog/atom.xml"
+    lifecycle_days: 7
 
-    - id: "yahoo-finance"
-      name: "雅虎财经"
-      url: "https://finance.yahoo.com/news/rssindex"
-      lifecycle_days: 1
+  - id: "yahoo-finance"
+    name: "雅虎财经"
+    url: "https://finance.yahoo.com/news/rssindex"
+    lifecycle_days: 1
 
 
     # 自定义源示例

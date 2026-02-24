@@ -53,6 +53,7 @@ class DatabaseManager:
                             source_type=article_data.get("source_type", "no source type"),
                             published_at=article_data.get("published_at", datetime.now()),
                             fetched_at=article_data.get("fetched_at", datetime.now()),
+                            lifecycle_days=article_data.get("lifecycle_days", -1),
                         )
                         session.add(article)
                         saved_count += 1
