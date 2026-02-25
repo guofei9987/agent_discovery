@@ -2,34 +2,6 @@
 我在用的信息获取app
 
 
-# future palns
-
-**LLM Assistance**
-- [x] LLM-based Information summarize
-- [ ] LLM-based Information retrieval
-- [ ] LLM-based Information reranking. Based on Prompts or user's action 
-
-
-**More Information Sources**
-- [x] arXiv
-- [x] RSS
-- Social Media:
-    - [ ] Reddit Api
-    - [ ] X Api
-- News Api:
-    - [ ] NewsAPI.org
-    - [ ] Associated Press API
-- Technical Sources:
-  - [ ] GitHub API for trending repositories
-  - [ ] Stack Overflow API for trending questions
-  - [ ] Dev.to API for developer articles
-
-- Academic Sources:
-  - [ ] PubMed for medical research
-  - [ ] IEEE Xplore for technical papers
-  - [ ] Google Scholar integration
-
-
 
 
 
@@ -196,6 +168,59 @@ rss:
       name: "雅虎财经"
       url: "https://finance.yahoo.com/news/rssindex"
 ```
+
+## LLM 配置
+
+可以给不同的功能模块，配置不同的模型
+
+```yaml
+# LLM 配置
+llm:
+  # 摘要功能配置
+  summarize:
+    model: "DeepSeek-V3.2" # 模型
+    api: "https://api.deepseek.com/v1" # LLM 的 api
+    api_key_env: "DEEPSEEK_API_KEY" # api_key 请放入环境变量中。不要填入明文！
+  
+  # 未来可添加其他功能模块
+  # arxiv_analyze:
+  #   model: "gpt-4"
+  #   api_base: "https://api.openai.com/v1"
+  #   api_key_env: "OPENAI_API_KEY"
+```
+
+
+
+# future palns
+
+**LLM Assistance**
+- [x] LLM-based Information summarize
+- [ ] LLM-based Information retrieval
+- [ ] LLM-based Information reranking. Based on Prompts or user's action 
+
+
+**More Information Sources**
+- [x] arXiv
+- [x] RSS
+- Social Media:
+    - [ ] Reddit Api
+    - [ ] X Api
+- News Api:
+    - [ ] NewsAPI.org
+    - [ ] Associated Press API
+- Technical Sources:
+  - [ ] GitHub API for trending repositories
+  - [ ] Stack Overflow API for trending questions
+  - [ ] Dev.to API for developer articles
+
+- Academic Sources:
+  - [ ] PubMed for medical research
+  - [ ] IEEE Xplore for technical papers
+  - [ ] Google Scholar integration
+
+- 前端优化
+  - [ ] LLM 的报错（api连接不上、key错误等信息），应当显示在前端卡片上
+
 
 
 # Thanks to

@@ -9,11 +9,13 @@ arXiv:
 
 news_source:
   lifecycle_days: 0
-  sources: # 不想使用的源可以注释掉
+  sources: # 不想使用的源可以注释掉，想添加的源可以取消注释
     - id: v2ex-share
       name: V2EX-最新分享
     - id: zhihu
       name: 知乎
+    - id: freebuf
+      name: Freebuf-网络安全
     - id: weibo
       name: 微博-实时热搜
     - id: zaobao
@@ -34,8 +36,8 @@ news_source:
       name: 36氪-人气榜
     - id: douyin
       name: 抖音
-    - id: hupu
-      name: 虎扑-主干道热帖
+    # - id: hupu
+    #   name: 虎扑-主干道热帖
     # - id: tieba
     #   name: 百度贴吧-热议
     - id: toutiao
@@ -72,8 +74,8 @@ news_source:
       name: Product Hunt
     - id: github-trending-today
       name: Github-Today
-    - id: bilibili
-      name: 哔哩哔哩
+    # - id: bilibili
+    #   name: 哔哩哔哩
     # - id: kuaishou
     #   name: 快手
     - id: kaopu
@@ -100,8 +102,6 @@ news_source:
     #   name: Steam-在线人数
     - id: tencent-hot
       name: 腾讯新闻-综合早报
-    - id: freebuf
-      name: Freebuf-网络安全
     # - id: qqvideo-tv-hotsearch
     #   name: 腾讯视频-热搜榜
     # - id: iqiyi-hot-ranklist
